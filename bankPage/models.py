@@ -19,22 +19,32 @@ from django.contrib.auth.models import User
 #######################################################################
 
 
-class Signup(models.Model):
+class Balance(models.Model):
     
     
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    email = models.EmailField(max_length=100)
+    # to key in the user balance  
+    Balance = models.DecimalField(max_digits=24,decimal_places=2)
     
-class Balance(models.Model):
+    def __str__(self):
+        return self.user.username + " " + "("+ str(self.Balance) + ")"
+    
+class Transaction(models.Model):
     
     
     #this user will find the user based on the uniq key that the user has
      
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     
-    # to key in the user balance  
-    Balance = models.DecimalField(max_digits=24,decimal_places=2)
     
+    #transaction data
+    Transaction = models.DecimalField(max_digits=24,decimal_places=2)
+    
+    #transcripton
+    Transcription=models.CharField(max_length=150)
+    
+    def __str__(self):
+        return self.user.username + " (" + self.Transcription +")"
     
     
     
