@@ -26,6 +26,9 @@ class Balance(models.Model):
     # to key in the user balance  
     Balance = models.DecimalField(max_digits=24,decimal_places=2)
     
+    
+    
+    
     def __str__(self):
         return self.user.username + " " + "("+ str(self.Balance) + ")"
     
