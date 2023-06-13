@@ -1,0 +1,28 @@
+.header {
+    text-align: center;
+    background-color: #f3dfdf;
+    padding: 20px;
+  }
+
+.textbox{
+
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 20px;
+
+}
+
+.button{
+
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+
+}
+
+
+
