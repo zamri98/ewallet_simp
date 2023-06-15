@@ -17,3 +17,7 @@ def homeProfile(request):
     
     
     return render(request,"profile.html",{"all_profile":profile})
+
+def boot(request):
+    
+    return render(request,"sign.html")
