@@ -13,4 +13,6 @@ urlpatterns= [
     
     path("login", views.homeProfile, name="login"),
     
+    path("join",views.join, name="join"),
+    
 ]

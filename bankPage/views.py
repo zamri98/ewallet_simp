@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import *
 from django.contrib.auth.models import User
+from .forms import Userform
 # Create your views here.
 
 def home(request):
@@ -17,4 +18,18 @@ def homeProfile(request):
     
     
     return render(request,"profile.html",{"all_profile":profile})
+
+def join(request) :
+    
+    #if the request method is POST or GET request
+    if request.method == "POST":
+        
+        #sent all the data from the form to be posted into userform in form.py file 
+        form =Userform(request.POST or None)
+        if form.is_valid():
+            form.save()
+        return render(request,"join.html")
+        
+    else:
+        return render(request,"join.html")
 
