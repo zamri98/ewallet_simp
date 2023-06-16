@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .models import *
 from django.contrib.auth.models import User
 from .forms import Userform
+from django.contrib import messages
 # Create your views here.
 
 def home(request):
@@ -28,7 +29,8 @@ def join(request) :
         form =Userform(request.POST or None)
         if form.is_valid():
             form.save()
-        return render(request,"join.html")
+        messages.add_message()
+        return redirect('home')
         
     else:
         return render(request,"join.html")
