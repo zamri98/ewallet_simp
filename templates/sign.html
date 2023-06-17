@@ -2,11 +2,13 @@
 
 
 {% block content %}
-    <form method="POST" action="{% url 'join' %}">
-
+    <form method="POST" action="{% url 'signup' %}">
         {% csrf_token %}
 
         
+
+
+
         <div class="form-group">
             <input type="text" class="form-control mt-3 " id="exampleInputPassword1" placeholder="First Name" name="first_name">
         </div>
