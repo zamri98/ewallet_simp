@@ -48,23 +48,5 @@ def homeProfile(request):
     
     
 
-def join(request) :
-    
-    #if the request method is POST or GET request
-    if request.method == "POST":
-        
-        #sent all the data from the form to be posted into userform in form.py file 
-        form =Userform(request.POST or None)
-        if form.is_valid():
-            form.save()
-            messages.success(request,("Your Account has been Created Succesfully"))
-            return redirect('home-page')
-        else:
-            messages.success(request,("There is error in your form"))
-            return render(request,"sign.html")
-            
 
-        
-    else:
-        return render(request,"sign.html")
 
