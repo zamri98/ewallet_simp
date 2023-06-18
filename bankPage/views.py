@@ -7,7 +7,23 @@ from django.contrib.auth import authenticate,login,logout
 # Create your views here.
 
 def home(request):
-    return render(request,"main.html")
+    if request.method == "POST":
+        
+        username=request.POST.get('username')
+        password=request.POST.get('password')
+        
+        user= authenticate(request,username=username,password=password)
+    
+        if user is not None:
+            login(request,user)
+            user_id = user.id
+            request.session['user_id'] = user_id
+            return render(request,"profile.html")
+        else:
+            return redirect('home-page')
+        
+    else:
+        return render(request,"main.html",{})
 
 def signup(request):
     
@@ -28,23 +44,26 @@ def signup(request):
        
     else:
         return render(request,"sign.html",{})
+    
+    
+def profile(request):
+    
+    user_id=request.session.get(user_id)
+    if user_id is not None:
+        
+
+        user_ids=User.objects.get(id=user_id)
+        
+        
+        return render(request,'profile.html',context={"user":user_ids})
+    
+    else :
+        return redirect('home-page')
+        
+        
+        
    
 
-def homeProfile(request):
-    
-    if request.method == "POST":
-        
-        username=request.POST.get('username')
-        password=request.POST.get('password')
-        
-        user= authenticate(request,username=username,password=password)
-    
-        if user is not None:
-            login(request,user)
-            return render(request,"profile.html")
-        else:
-            return redirect('home-page')
-        
     
     
 

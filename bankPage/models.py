@@ -24,7 +24,7 @@ class Balance(models.Model):
     
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     # to key in the user balance  
-    Balance = models.DecimalField(max_digits=24,decimal_places=2)
+    total_balance = models.DecimalField(max_digits=24,decimal_places=2)
     
     
     
