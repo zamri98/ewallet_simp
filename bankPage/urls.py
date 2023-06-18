@@ -11,7 +11,10 @@ urlpatterns= [
     # the name is used to be able to be called at the html file
     path("signup", views.signup, name="signup"),
     
-    #path("login", views.homeProfile, name="login"),
+    #we need to add/<int:pk whenever we received a private key(pk) 
+    path("profile/<int:pk>/", views.profile, name="profile"),
+    
+  
     
     
     
