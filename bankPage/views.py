@@ -16,12 +16,12 @@ def home(request):
     
         if user is not None:
             login(request,user)
-            pk=user.pk
+        
             
             ### we need for use for futher used of user id
             user_id = user.id
             request.session['user_id'] = user_id
-            return redirect('profile',pk=pk)
+            return redirect('profile')
         else:
             return redirect('home-page')
         
@@ -49,21 +49,32 @@ def signup(request):
         return render(request,"sign.html",{})
     
     
-def profile(request,pk):
+def profile(request):
     
     
     user_pk= request.session.get('user_id')
     
-    user=User.objects.get(id=pk)
+    user=User.objects.get(id=user_pk)
     username=user.username
     
-    user_balance=Balance.objects.get(user_id=pk)    
+    user_balance=Balance.objects.get(user_id=user_pk)    
         
     return render(request,'profile.html',context={"username":username,"Balance":user_balance.total_balance})
     
 
+def cashin(request):
+    
+    user_pk= request.session.get('user_id')
+    
+    return render(request,"cash_in.html")
+
+
+def cashout(request):
+    
+    user_pk= request.session.get('user_id')
+    
+    return render(request,"cash_out.html")
  
-        
         
    
 
