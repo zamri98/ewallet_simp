@@ -28,4 +28,11 @@ class Userform(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+class TranscForm(forms.ModelForm):
+    
+    class Meta:
+        
+        model=Transaction
+        fields=["Transaction","Transcription"]
     
