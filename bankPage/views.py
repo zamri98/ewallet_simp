@@ -139,10 +139,38 @@ def cashin(request):
 
 def cashout(request):
     
-    user_pk= request.session.get('user_id')
+    user_pk = request.session.get('user_id')
+    user_balance = Balance.objects.get(user_id=user_pk)
     
-    return render(request,"cash_out.html")
- 
+    if request.method == "POST":
+        form = TranscForm(request.POST)
+        if form.is_valid():
+            clean_data = form.cleaned_data
+            transcation_amount = Decimal(clean_data.get('Transaction'))
+
+            # Update the user's balance
+            new_balance = user_balance.total_balance - transcation_amount
+            user_balance.total_balance = new_balance
+            user_balance.save()
+
+            # Save the transaction with the cash-in type
+            
+            #we commit to false because we want to add all field first in the form we only provide 2 fields
+            #the transaction type not yet
+            transaction = form.save(commit=False)
+            transaction.user_id = user_pk  # Set the user_id field
+            transaction.transacation_type = "cashout"
+            transaction.save()
+
+            messages.success(request, "You have successfully cashed out.")
+            return redirect('profile')
+        else:
+            messages.error(request, "There is an error in your form.")
+            return redirect('cashout')
+    else:
+        form = TranscForm()
+
+    return render(request, "cash_out.html", {'form': form})
         
    
 
