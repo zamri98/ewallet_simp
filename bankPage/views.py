@@ -1,9 +1,10 @@
 from django.shortcuts import render,redirect
 from .models import *
 from django.contrib.auth.models import User
-from .forms import Userform
+from .forms import Userform,TranscForm
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
+from decimal import Decimal
 # Create your views here.
 
 def home(request):
@@ -16,12 +17,12 @@ def home(request):
     
         if user is not None:
             login(request,user)
-            pk=user.pk
+        
             
             ### we need for use for futher used of user id
             user_id = user.id
             request.session['user_id'] = user_id
-            return redirect('profile',pk=pk)
+            return redirect('profile')
         else:
             return redirect('home-page')
         
@@ -49,21 +50,99 @@ def signup(request):
         return render(request,"sign.html",{})
     
     
-def profile(request,pk):
+def profile(request):
     
     
     user_pk= request.session.get('user_id')
     
-    user=User.objects.get(id=pk)
+    user=User.objects.get(id=user_pk)
     username=user.username
     
-    user_balance=Balance.objects.get(user_id=pk)    
+    user_balance=Balance.objects.get(user_id=user_pk)    
         
     return render(request,'profile.html',context={"username":username,"Balance":user_balance.total_balance})
     
-
- 
+"""
+def cashin(request):
+    
+    user_pk= request.session.get('user_id')
+    user_balance=Balance.objects.get(user_id=user_pk)
+    
+    if request.method == "POST":
         
+        #sent all the data from the form to be posted into TranscForm in form.py file 
+        form =TranscForm(request.POST or None)
+        if form.is_valid():
+            
+            #Save the new balance
+            clean_data=form.cleaned_data
+            new_balance=user_balance.total_balance + Decimal(clean_data["Transaction"])
+            user_balance.total_balance =new_balance
+            user_balance.save() 
+            
+            
+            
+            
+           
+            form.save()
+            #save the type of transaction
+            type_value=Transaction.objects.get(user_id=user_pk)
+            type_value.transacation_type= "cashin"
+            type_value.save()
+            messages.success(request,("You Successfull cash in "))
+            return redirect('profile')
+    
+        else:
+            messages.success(request,("There is error in your form"))
+            return redirect("cashin")
+            
+
+    
+    else:
+        return render(request,"cash_in.html")
+"""
+
+
+def cashin(request):
+    user_pk = request.session.get('user_id')
+    user_balance = Balance.objects.get(user_id=user_pk)
+
+    if request.method == "POST":
+        form = TranscForm(request.POST)
+        if form.is_valid():
+            clean_data = form.cleaned_data
+            transcation_amount = Decimal(clean_data.get('Transaction'))
+
+            # Update the user's balance
+            new_balance = user_balance.total_balance + transcation_amount
+            user_balance.total_balance = new_balance
+            user_balance.save()
+
+            # Save the transaction with the cash-in type
+            
+            #we commit to false because we want to add all field first in the form we only provide 2 fields
+            #the transaction type not yet
+            transaction = form.save(commit=False)
+            transaction.user_id = user_pk  # Set the user_id field
+            transaction.transacation_type = "cashin"
+            transaction.save()
+
+            messages.success(request, "You have successfully cashed in.")
+            return redirect('profile')
+        else:
+            messages.error(request, "There is an error in your form.")
+            return redirect('cashin')
+    else:
+        form = TranscForm()
+
+    return render(request, "cash_in.html", {'form': form})
+
+def cashout(request):
+    
+    user_pk= request.session.get('user_id')
+    
+    return render(request,"cash_out.html")
+ 
         
    
 
