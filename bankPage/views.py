@@ -171,6 +171,18 @@ def cashout(request):
         form = TranscForm()
 
     return render(request, "cash_out.html", {'form': form})
+
+
+def history(request):
+    
+    user_pk = request.session.get('user_id')
+    
+    # to grab multiple object have to use filter rather than get()
+    user_history=Transaction.objects.filter(user_id=user_pk)
+    context={"history":user_history}
+    
+    
+    return render(request,"history.html",context=context)
         
    
 
