@@ -183,6 +183,11 @@ def history(request):
     
     
     return render(request,"history.html",context=context)
+
+
+def navbar(request):
+    
+    return render(request,"navbar.html")
         
    
 
