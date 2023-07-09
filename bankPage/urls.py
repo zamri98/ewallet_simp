@@ -17,7 +17,8 @@ urlpatterns= [
     path("cashin", views.cashin, name="cashin"),
     path("cashout", views.cashout, name="cashout"),
     path("history", views.history, name="history"),
-    path("navbar",views.navbar,name="navbar")
+    path("navbar",views.navbar,name="navbar"),
+    path("transfer",views.transfer,name="transfer"),
     
     
     
