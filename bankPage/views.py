@@ -1,9 +1,10 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from .models import *
 from django.contrib.auth.models import User
 from .forms import Userform,TranscForm
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required
 from decimal import Decimal
 # Create your views here.
 
@@ -49,7 +50,8 @@ def signup(request):
     else:
         return render(request,"sign.html",{})
     
-    
+ 
+@login_required(login_url="home-page")
 def profile(request):
     
     
@@ -61,6 +63,29 @@ def profile(request):
     user_balance=Balance.objects.get(user_id=user_pk)    
         
     return render(request,'profile.html',context={"username":username,"Balance":user_balance.total_balance})
+
+def transfer(request):
+    
+    user_pk= request.session.get('user_id')
+    user=User.objects.get(id=user_pk)
+    
+    if request.method == "POST":
+        
+        receiver_id= request.POST.get('receipient')
+        amount=request.POST.get('amount')
+        
+        
+        # if the form is not null
+        if receiver_id and amount:
+            #if the receiver in the object it will render confirmation.html
+            receiver = get_object_or_404(User, username=receiver_id)
+            return render(request, "confirmation.html")
+        else:
+            messages.error(request, "Please provide a valid receiver and amout was not null.")
+            return render(request, "transfer.html")
+
+    
+    return render(request,"transfer.html")
     
 """
 def cashin(request):
