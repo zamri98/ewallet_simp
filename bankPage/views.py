@@ -64,6 +64,9 @@ def profile(request):
         
     return render(request,'profile.html',context={"username":username,"Balance":user_balance.total_balance})
 
+
+# THIS VIEW NOT DONE YET SENT RECEIVER ID AND AMOUNT TO SESSION 
+# TO BE USED IN NEXT CONFIRMATION VIEW
 def transfer(request):
     
     user_pk= request.session.get('user_id')
