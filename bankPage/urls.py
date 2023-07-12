@@ -19,6 +19,7 @@ urlpatterns= [
     path("history", views.history, name="history"),
     path("navbar",views.navbar,name="navbar"),
     path("transfer",views.transfer,name="transfer"),
+    path("confirmation",views.confirmation,name="confirmations"),
     
     
     

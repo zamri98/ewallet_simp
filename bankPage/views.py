@@ -70,7 +70,7 @@ def profile(request):
 def transfer(request):
     
     user_pk= request.session.get('user_id')
-    user=User.objects.get(id=user_pk)
+    sender=User.objects.get(id=user_pk)
     
     if request.method == "POST":
         
@@ -82,13 +82,40 @@ def transfer(request):
         if receiver_id and amount:
             #if the receiver in the object it will render confirmation.html
             receiver = get_object_or_404(User, username=receiver_id)
-            return render(request, "confirmation.html")
+
+            #save the receiver id to be used in confirmation view
+            request.session['receiver_id'] = receiver.id 
+            
+            #save the amount to be used in confirmation view
+            request.session['amount'] = amount
+            #avoid using render if there something you want to pass in the if statement
+            # it only will run the html without run the view 
+            return redirect("confirmations")
         else:
             messages.error(request, "Please provide a valid receiver and amout was not null.")
             return render(request, "transfer.html")
 
     
     return render(request,"transfer.html")
+
+def confirmation(request):
+    
+    
+    receiver_id=request.session.get('receiver_id')
+    
+    ### find sender wallet balance and its name##
+    receiver=User.objects.get(id=receiver_id)
+    
+    
+    
+    
+    
+    
+    
+    
+    return render(request, "confirmation.html",{"receiver":receiver})
+
+
     
 """
 def cashin(request):
