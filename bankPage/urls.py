@@ -20,11 +20,8 @@ urlpatterns= [
     path("navbar",views.navbar,name="navbar"),
     path("transfer",views.transfer,name="transfer"),
     path("confirmation",views.confirmation,name="confirmations"),
+    path("logout",views.logoutuser,name="logout")
     
-    
-    
-    
-  
     
     
     

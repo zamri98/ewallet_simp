@@ -74,8 +74,10 @@ def transfer(request):
     
     if request.method == "POST":
         
+        
         receiver_id= request.POST.get('receipient')
         amount=request.POST.get('amount')
+        
         
         
         # if the form is not null
@@ -100,20 +102,71 @@ def transfer(request):
 
 def confirmation(request):
     
+    transaction_amount=Decimal(request.session.get("amount"))
+    ### find sender name##
+    user_pk= request.session.get('user_id')
+    sender=User.objects.get(id=user_pk)
     
-    receiver_id=request.session.get('receiver_id')
+
     
-    ### find sender wallet balance and its name##
+    ### find receiver name to update into the transcription ##
+    receiver_id=request.session.get('receiver_id')   
     receiver=User.objects.get(id=receiver_id)
     
     
     
     
     
+    if request.method == "POST":
+        
+        #get the receiver object and update the total balance
+        receiver_balance= Balance.objects.get(user_id=receiver_id)
+        receiver_balance.total_balance = receiver_balance.total_balance + transaction_amount
+        receiver_balance.save()
+        
+        
+        receiver_transaction = transaction_amount
+        receiver_transcription="Receive cash from " + sender.username
+        receiver_transfer_type="cashin"
+        
+        
+        #create the receiver transaction object
+        receiver_instance_create=Transaction(Transaction=receiver_transaction,
+                                             Transcription=receiver_transcription,
+                                             transacation_type=receiver_transfer_type,
+                                             user_id=receiver_id)
+        
+        receiver_instance_create.save()
+        
+    
+        #get the sender object and update the total balance
+        sender_balance = Balance.objects.get(user_id=user_pk)
+        sender_balance.total_balance = sender_balance.total_balance - transaction_amount
+        sender_balance.save()
+        
+        #create the sender transaction object
+        sender_transaction = transaction_amount
+        sender_transcription="transfer cash to " + receiver.username
+        sender_transfer_type="cashout"
+        
+        sender_instance_create=Transaction(Transaction=sender_transaction,
+                                             Transcription=sender_transcription,
+                                             transacation_type=sender_transfer_type,
+                                             user_id=user_pk)
+        
+        sender_instance_create.save()
+        
+    
+
+        
+        messages.success(request, "You have successfully transfer.") 
+        return redirect("profile")
     
     
     
-    return render(request, "confirmation.html",{"receiver":receiver})
+    
+    
+    return render(request, "confirmation.html",{"receiver":receiver,"amount":transaction_amount})
 
 
     
@@ -243,11 +296,15 @@ def history(request):
 def navbar(request):
     
     return render(request,"navbar.html")
+
+def logoutuser(request):
+    
+    logout(request)
+    return redirect("home-page")
+    
         
    
 
     
     
-
-
 
