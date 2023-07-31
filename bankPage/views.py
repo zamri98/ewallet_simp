@@ -170,45 +170,6 @@ def confirmation(request):
 
 
     
-"""
-def cashin(request):
-    
-    user_pk= request.session.get('user_id')
-    user_balance=Balance.objects.get(user_id=user_pk)
-    
-    if request.method == "POST":
-        
-        #sent all the data from the form to be posted into TranscForm in form.py file 
-        form =TranscForm(request.POST or None)
-        if form.is_valid():
-            
-            #Save the new balance
-            clean_data=form.cleaned_data
-            new_balance=user_balance.total_balance + Decimal(clean_data["Transaction"])
-            user_balance.total_balance =new_balance
-            user_balance.save() 
-            
-            
-            
-            
-           
-            form.save()
-            #save the type of transaction
-            type_value=Transaction.objects.get(user_id=user_pk)
-            type_value.transacation_type= "cashin"
-            type_value.save()
-            messages.success(request,("You Successfull cash in "))
-            return redirect('profile')
-    
-        else:
-            messages.success(request,("There is error in your form"))
-            return redirect("cashin")
-            
-
-    
-    else:
-        return render(request,"cash_in.html")
-"""
 
 
 def cashin(request):
